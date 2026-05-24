@@ -38,11 +38,11 @@ function BroadsheetPage() {
       const totals = usedSubjects.map(sub => Number(studentResults.find(r => r.subject_id === sub.id)?.total ?? 0));
       const sum = totals.reduce((a, b) => a + b, 0);
       const filled = totals.filter(t => t > 0).length || 1;
-      return { student: s, totals, sum, average: sum / filled };
+      return { student: s, totals, sum, average: sum / filled, position: 0 };
     });
     const sorted = [...built].sort((a, b) => b.sum - a.sum);
-    sorted.forEach((r, i) => ((r as any).position = i + 1));
-    return { rows: built.map(b => ({ ...b, position: sorted.find(x => x.student.id === b.student.id)?.position })), subjects: usedSubjects };
+    sorted.forEach((r, i) => { r.position = i + 1; });
+    return { rows: built, subjects: usedSubjects };
   }, [data]);
 
   const exportCsv = () => {
