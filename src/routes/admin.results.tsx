@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/results")({ component: ResultsPage });
 
-function ResultsPage() {
+export function ResultsPage() {
   const qc = useQueryClient();
   const [filters, setFilters] = useState({ class_id: "", subject_id: "", session_id: "", term_id: "" });
   const [scores, setScores] = useState<Record<string, { ca1: number; ca2: number; exam: number }>>({});
