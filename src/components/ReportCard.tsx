@@ -14,7 +14,7 @@ export function ReportCard({ studentId, termId }: { studentId: string; termId: s
         supabase.from("school_settings").select("*").eq("id", 1).single(),
         supabase.from("subjects").select("*"),
       ]);
-      if (!student || !term) return null;
+      if (!student || !term || !student.class_id) return null;
       const sessionId = term.session_id;
       // All results for class+session+term (to compute positions, highest, lowest, average)
       const { data: classResults } = await supabase.from("results").select("*")
