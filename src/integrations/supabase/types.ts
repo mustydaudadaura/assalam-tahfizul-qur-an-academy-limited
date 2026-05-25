@@ -124,6 +124,7 @@ export type Database = {
         Row: {
           ca1: number
           ca2: number
+          ca3: number
           class_id: string
           created_at: string
           entered_by: string | null
@@ -140,6 +141,7 @@ export type Database = {
         Insert: {
           ca1?: number
           ca2?: number
+          ca3?: number
           class_id: string
           created_at?: string
           entered_by?: string | null
@@ -156,6 +158,7 @@ export type Database = {
         Update: {
           ca1?: number
           ca2?: number
+          ca3?: number
           class_id?: string
           created_at?: string
           entered_by?: string | null
@@ -266,6 +269,54 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      student_term_reports: {
+        Row: {
+          class_teacher_remark: string | null
+          created_at: string
+          id: string
+          next_term_begins: string | null
+          principal_remark: string | null
+          student_id: string
+          term_id: string
+          updated_at: string
+        }
+        Insert: {
+          class_teacher_remark?: string | null
+          created_at?: string
+          id?: string
+          next_term_begins?: string | null
+          principal_remark?: string | null
+          student_id: string
+          term_id: string
+          updated_at?: string
+        }
+        Update: {
+          class_teacher_remark?: string | null
+          created_at?: string
+          id?: string
+          next_term_begins?: string | null
+          principal_remark?: string | null
+          student_id?: string
+          term_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_term_reports_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_term_reports_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
+            referencedRelation: "terms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       students: {
         Row: {
