@@ -1,7 +1,7 @@
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { AppShell } from "@/components/AppShell";
-import { LayoutDashboard, Users, GraduationCap, BookOpen, School, Calendar, ClipboardList, FileSpreadsheet, Settings, UserCog } from "lucide-react";
+import { LayoutDashboard, Users, BookOpen, School, Calendar, ClipboardList, FileSpreadsheet, Settings, UserCog, MessageSquare } from "lucide-react";
 import { GraduationCap as Loader } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({ component: AdminLayout });
@@ -14,6 +14,7 @@ const items = [
   { to: "/admin/subjects", label: "Subjects", icon: <BookOpen className="size-4" /> },
   { to: "/admin/sessions", label: "Sessions & Terms", icon: <Calendar className="size-4" /> },
   { to: "/admin/results", label: "Results", icon: <ClipboardList className="size-4" /> },
+  { to: "/admin/remarks", label: "Remarks", icon: <MessageSquare className="size-4" /> },
   { to: "/admin/broadsheet", label: "Broadsheet", icon: <FileSpreadsheet className="size-4" /> },
   { to: "/admin/settings", label: "Settings", icon: <Settings className="size-4" /> },
 ];
