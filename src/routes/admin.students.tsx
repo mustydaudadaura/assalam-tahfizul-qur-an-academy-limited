@@ -76,7 +76,7 @@ function StudentsPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const openEdit = (s: typeof students[number]) => {
+  const openEdit = (s: NonNullable<typeof students>[number]) => {
     setEditId(s.id);
     setForm({
       admission_no: s.admission_no, full_name: s.full_name, gender: s.gender ?? "Male",
