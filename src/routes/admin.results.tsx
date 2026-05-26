@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
+import { ScoreImportExport } from "@/components/ScoreImportExport";
 
 export const Route = createFileRoute("/admin/results")({ component: ResultsPage });
 
@@ -93,9 +94,18 @@ export function ResultsPage() {
 
       {ready && (
         <Card>
-          <div className="flex items-center justify-between p-4">
-            <div className="text-sm text-muted-foreground">{students?.length ?? 0} students. 1st CA (10) · 2nd CA (10) · 3rd CA (20) · Exam (60) = 100</div>
-            <Button onClick={() => save.mutate()} disabled={save.isPending}><Save className="mr-2 size-4" />Save results</Button>
+          <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+            <div className="text-sm text-muted-foreground">{students?.length ?? 0} students. 1st CA (10) · 2nd CA (10) · 3rd CA (20) · Exam (60) = 100. Bulk import uses CA1 (20) · CA2 (20) · Exam (60).</div>
+            <div className="flex flex-wrap items-center gap-2">
+              <ScoreImportExport
+                ready={!!ready}
+                students={(students ?? []).map(s => ({ id: s.id, admission_no: s.admission_no, full_name: s.full_name }))}
+                filters={filters}
+                currentScores={scores}
+                onImported={() => qc.invalidateQueries({ queryKey: ["roster"] })}
+              />
+              <Button onClick={() => save.mutate()} disabled={save.isPending}><Save className="mr-2 size-4" />Save results</Button>
+            </div>
           </div>
           <div className="overflow-x-auto">
           <Table>
