@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
+import { ScoreImportExport } from "@/components/ScoreImportExport";
 
 export const Route = createFileRoute("/admin/results")({ component: ResultsPage });
 
