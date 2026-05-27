@@ -12,7 +12,7 @@ type Props = {
   ready: boolean;
   students: Student[];
   filters: { class_id: string; subject_id: string; session_id: string; term_id: string };
-  currentScores: Record<string, { ca1: number; ca2: number; ca3: number; exam: number }>;
+  currentScores: Record<string, { ca1: number; ca2: number; exam: number }>;
   onImported: () => void;
 };
 
@@ -86,7 +86,7 @@ export function ScoreImportExport({ ready, students, filters, currentScores, onI
       }
 
       const studentByAdm = new Map(students.map(s => [s.admission_no.trim().toLowerCase(), s]));
-      const valid: { student_id: string; ca1: number; ca2: number; ca3: number; exam: number }[] = [];
+      const valid: { student_id: string; ca1: number; ca2: number; exam: number }[] = [];
       const errs: RowError[] = [];
 
       rows.forEach((row, i) => {
@@ -109,11 +109,9 @@ export function ScoreImportExport({ ready, students, filters, currentScores, onI
           errs.push({ admission_no: adm, full_name: student.full_name, reason: fail });
           return;
         }
-        // preserve any existing ca3 from current data so we don't wipe it
-        const ca3 = currentScores[student.id]?.ca3 ?? 0;
         valid.push({
           student_id: student.id,
-          ca1: ca1.value!, ca2: ca2.value!, ca3, exam: exam.value!,
+          ca1: ca1.value!, ca2: ca2.value!, exam: exam.value!,
         });
       });
 
@@ -151,8 +149,8 @@ export function ScoreImportExport({ ready, students, filters, currentScores, onI
 
   const exportCurrent = (ext: "xlsx" | "csv") => {
     const rows = students.map(s => {
-      const sc = currentScores[s.id] ?? { ca1: 0, ca2: 0, ca3: 0, exam: 0 };
-      const total = (sc.ca1 || 0) + (sc.ca2 || 0) + (sc.ca3 || 0) + (sc.exam || 0);
+      const sc = currentScores[s.id] ?? { ca1: 0, ca2: 0, exam: 0 };
+      const total = (sc.ca1 || 0) + (sc.ca2 || 0) + (sc.exam || 0);
       const grade = total >= 70 ? "A" : total >= 60 ? "B" : total >= 50 ? "C" : total >= 45 ? "D" : "F";
       return {
         AdmissionNo: s.admission_no,
