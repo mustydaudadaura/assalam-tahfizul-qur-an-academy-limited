@@ -69,6 +69,45 @@ export type Database = {
           },
         ]
       }
+      attendance_daily: {
+        Row: {
+          class_id: string
+          created_at: string
+          date: string
+          id: string
+          marked_by: string | null
+          session_id: string
+          status: string
+          student_id: string
+          term_id: string
+          updated_at: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          date: string
+          id?: string
+          marked_by?: string | null
+          session_id: string
+          status?: string
+          student_id: string
+          term_id: string
+          updated_at?: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          date?: string
+          id?: string
+          marked_by?: string | null
+          session_id?: string
+          status?: string
+          student_id?: string
+          term_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       classes: {
         Row: {
           created_at: string
