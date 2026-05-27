@@ -114,18 +114,21 @@ export type Database = {
           id: string
           level: string | null
           name: string
+          section: string | null
         }
         Insert: {
           created_at?: string
           id?: string
           level?: string | null
           name: string
+          section?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           level?: string | null
           name?: string
+          section?: string | null
         }
         Relationships: []
       }
@@ -163,7 +166,6 @@ export type Database = {
         Row: {
           ca1: number
           ca2: number
-          ca3: number
           class_id: string
           created_at: string
           entered_by: string | null
@@ -180,7 +182,6 @@ export type Database = {
         Insert: {
           ca1?: number
           ca2?: number
-          ca3?: number
           class_id: string
           created_at?: string
           entered_by?: string | null
@@ -197,7 +198,6 @@ export type Database = {
         Update: {
           ca1?: number
           ca2?: number
-          ca3?: number
           class_id?: string
           created_at?: string
           entered_by?: string | null
@@ -260,7 +260,10 @@ export type Database = {
           principal_name: string | null
           principal_signature_url: string | null
           school_name: string
+          secondary_logo_url: string | null
+          section_label: string | null
           updated_at: string
+          website: string | null
         }
         Insert: {
           address?: string | null
@@ -272,7 +275,10 @@ export type Database = {
           principal_name?: string | null
           principal_signature_url?: string | null
           school_name?: string
+          secondary_logo_url?: string | null
+          section_label?: string | null
           updated_at?: string
+          website?: string | null
         }
         Update: {
           address?: string | null
@@ -284,7 +290,10 @@ export type Database = {
           principal_name?: string | null
           principal_signature_url?: string | null
           school_name?: string
+          secondary_logo_url?: string | null
+          section_label?: string | null
           updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -311,32 +320,56 @@ export type Database = {
       }
       student_term_reports: {
         Row: {
+          affective: Json | null
           class_teacher_remark: string | null
           created_at: string
+          head_name: string | null
+          head_signature_url: string | null
           id: string
           next_term_begins: string | null
           principal_remark: string | null
+          promotion_status: string | null
+          psychomotor: Json | null
+          serial_no: string | null
           student_id: string
+          teacher_name: string | null
+          teacher_signature_url: string | null
           term_id: string
           updated_at: string
         }
         Insert: {
+          affective?: Json | null
           class_teacher_remark?: string | null
           created_at?: string
+          head_name?: string | null
+          head_signature_url?: string | null
           id?: string
           next_term_begins?: string | null
           principal_remark?: string | null
+          promotion_status?: string | null
+          psychomotor?: Json | null
+          serial_no?: string | null
           student_id: string
+          teacher_name?: string | null
+          teacher_signature_url?: string | null
           term_id: string
           updated_at?: string
         }
         Update: {
+          affective?: Json | null
           class_teacher_remark?: string | null
           created_at?: string
+          head_name?: string | null
+          head_signature_url?: string | null
           id?: string
           next_term_begins?: string | null
           principal_remark?: string | null
+          promotion_status?: string | null
+          psychomotor?: Json | null
+          serial_no?: string | null
           student_id?: string
+          teacher_name?: string | null
+          teacher_signature_url?: string | null
           term_id?: string
           updated_at?: string
         }
@@ -367,6 +400,7 @@ export type Database = {
           gender: string | null
           guardian_name: string | null
           guardian_phone: string | null
+          house: string | null
           id: string
           passport_url: string | null
           user_id: string | null
@@ -380,6 +414,7 @@ export type Database = {
           gender?: string | null
           guardian_name?: string | null
           guardian_phone?: string | null
+          house?: string | null
           id?: string
           passport_url?: string | null
           user_id?: string | null
@@ -393,6 +428,7 @@ export type Database = {
           gender?: string | null
           guardian_name?: string | null
           guardian_phone?: string | null
+          house?: string | null
           id?: string
           passport_url?: string | null
           user_id?: string | null
@@ -409,21 +445,27 @@ export type Database = {
       }
       subjects: {
         Row: {
+          category: string | null
           code: string | null
           created_at: string
           id: string
+          max_score: number | null
           name: string
         }
         Insert: {
+          category?: string | null
           code?: string | null
           created_at?: string
           id?: string
+          max_score?: number | null
           name: string
         }
         Update: {
+          category?: string | null
           code?: string | null
           created_at?: string
           id?: string
+          max_score?: number | null
           name?: string
         }
         Relationships: []
@@ -474,6 +516,8 @@ export type Database = {
           is_current: boolean
           name: string
           session_id: string
+          term_begins: string | null
+          term_ends: string | null
         }
         Insert: {
           created_at?: string
@@ -481,6 +525,8 @@ export type Database = {
           is_current?: boolean
           name: string
           session_id: string
+          term_begins?: string | null
+          term_ends?: string | null
         }
         Update: {
           created_at?: string
@@ -488,6 +534,8 @@ export type Database = {
           is_current?: boolean
           name?: string
           session_id?: string
+          term_begins?: string | null
+          term_ends?: string | null
         }
         Relationships: [
           {
