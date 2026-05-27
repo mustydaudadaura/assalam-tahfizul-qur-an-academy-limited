@@ -17,7 +17,7 @@ export const Route = createFileRoute("/admin/results")({ component: ResultsPage 
 export function ResultsPage() {
   const qc = useQueryClient();
   const [filters, setFilters] = useState({ class_id: "", subject_id: "", session_id: "", term_id: "" });
-  const [scores, setScores] = useState<Record<string, { ca1: number; ca2: number; ca3: number; exam: number }>>({});
+  const [scores, setScores] = useState<Record<string, { ca1: number; ca2: number; exam: number }>>({});
 
   const { data: classes } = useQuery({ queryKey: ["classes"], queryFn: async () => (await supabase.from("classes").select("*").order("name")).data ?? [] });
   const { data: subjects } = useQuery({ queryKey: ["subjects"], queryFn: async () => (await supabase.from("subjects").select("*").order("name")).data ?? [] });
@@ -34,22 +34,22 @@ export function ResultsPage() {
       const { data: existing } = await supabase.from("results").select("*")
         .eq("subject_id", filters.subject_id).eq("session_id", filters.session_id).eq("term_id", filters.term_id)
         .in("student_id", studs.map(s => s.id));
-      const map: Record<string, { ca1: number; ca2: number; ca3: number; exam: number }> = {};
-      existing?.forEach(r => { map[r.student_id] = { ca1: Number(r.ca1), ca2: Number(r.ca2), ca3: Number((r as any).ca3 ?? 0), exam: Number(r.exam) }; });
+      const map: Record<string, { ca1: number; ca2: number; exam: number }> = {};
+      existing?.forEach(r => { map[r.student_id] = { ca1: Number(r.ca1), ca2: Number(r.ca2), exam: Number(r.exam) }; });
       setScores(map);
       return studs;
     },
     enabled: !!filters.class_id,
   });
 
-  const calcRemark = (g: string) => ({ A: "Excellent", B: "Very Good", C: "Good", D: "Pass", F: "Fail" } as Record<string, string>)[g] ?? "";
+  const calcRemark = (g: string) => ({ A: "Excellent", B: "Very Good", C: "Good", D: "Fair", F: "Fail" } as Record<string, string>)[g] ?? "";
 
   const save = useMutation({
     mutationFn: async () => {
       const rows = Object.entries(scores).map(([student_id, s]) => ({
         student_id, subject_id: filters.subject_id, class_id: filters.class_id,
         session_id: filters.session_id, term_id: filters.term_id,
-        ca1: s.ca1 || 0, ca2: s.ca2 || 0, ca3: s.ca3 || 0, exam: s.exam || 0,
+        ca1: s.ca1 || 0, ca2: s.ca2 || 0, exam: s.exam || 0,
       }));
       const { error } = await supabase.from("results").upsert(rows, { onConflict: "student_id,subject_id,session_id,term_id" });
       if (error) throw error;
@@ -95,7 +95,7 @@ export function ResultsPage() {
       {ready && (
         <Card>
           <div className="flex flex-wrap items-center justify-between gap-3 p-4">
-            <div className="text-sm text-muted-foreground">{students?.length ?? 0} students. 1st CA (10) · 2nd CA (10) · 3rd CA (20) · Exam (60) = 100. Bulk import uses CA1 (20) · CA2 (20) · Exam (60).</div>
+            <div className="text-sm text-muted-foreground">{students?.length ?? 0} students · 1st CA (20) · 2nd CA (20) · Exam (60) = 100</div>
             <div className="flex flex-wrap items-center gap-2">
               <ScoreImportExport
                 ready={!!ready}
@@ -112,22 +112,21 @@ export function ResultsPage() {
             <TableHeader><TableRow>
               <TableHead>Adm No</TableHead><TableHead>Student</TableHead>
               <TableHead className="w-20">1st CA</TableHead><TableHead className="w-20">2nd CA</TableHead>
-              <TableHead className="w-20">3rd CA</TableHead><TableHead className="w-20">Exam</TableHead>
+              <TableHead className="w-20">Exam</TableHead>
               <TableHead className="w-16">Total</TableHead><TableHead>Grade</TableHead><TableHead>Remark</TableHead>
             </TableRow></TableHeader>
             <TableBody>
               {students?.map(s => {
-                const sc = scores[s.id] ?? { ca1: 0, ca2: 0, ca3: 0, exam: 0 };
-                const total = (sc.ca1 || 0) + (sc.ca2 || 0) + (sc.ca3 || 0) + (sc.exam || 0);
+                const sc = scores[s.id] ?? { ca1: 0, ca2: 0, exam: 0 };
+                const total = (sc.ca1 || 0) + (sc.ca2 || 0) + (sc.exam || 0);
                 const grade = total >= 70 ? "A" : total >= 60 ? "B" : total >= 50 ? "C" : total >= 45 ? "D" : "F";
-                const upd = (k: "ca1" | "ca2" | "ca3" | "exam", v: string) => setScores({ ...scores, [s.id]: { ...sc, [k]: Number(v) } });
+                const upd = (k: "ca1" | "ca2" | "exam", v: string) => setScores({ ...scores, [s.id]: { ...sc, [k]: Number(v) } });
                 return (
                   <TableRow key={s.id}>
                     <TableCell className="font-mono text-xs">{s.admission_no}</TableCell>
                     <TableCell className="font-medium">{s.full_name}</TableCell>
-                    <TableCell><Input type="number" min={0} max={10} value={sc.ca1} onChange={e => upd("ca1", e.target.value)} /></TableCell>
-                    <TableCell><Input type="number" min={0} max={10} value={sc.ca2} onChange={e => upd("ca2", e.target.value)} /></TableCell>
-                    <TableCell><Input type="number" min={0} max={20} value={sc.ca3} onChange={e => upd("ca3", e.target.value)} /></TableCell>
+                    <TableCell><Input type="number" min={0} max={20} value={sc.ca1} onChange={e => upd("ca1", e.target.value)} /></TableCell>
+                    <TableCell><Input type="number" min={0} max={20} value={sc.ca2} onChange={e => upd("ca2", e.target.value)} /></TableCell>
                     <TableCell><Input type="number" min={0} max={60} value={sc.exam} onChange={e => upd("exam", e.target.value)} /></TableCell>
                     <TableCell className="font-semibold">{total}</TableCell>
                     <TableCell><span className={`rounded px-2 py-0.5 text-xs font-medium ${grade === "F" ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>{grade}</span></TableCell>
@@ -144,4 +143,5 @@ export function ResultsPage() {
     </div>
   );
 }
+
 
