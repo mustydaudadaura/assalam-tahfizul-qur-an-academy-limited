@@ -30,7 +30,9 @@ function SettingsPage() {
     mutationFn: async () => {
       const { error } = await supabase.from("school_settings").update({
         school_name: form.school_name, motto: form.motto, address: form.address,
-        phone: form.phone, email: form.email, logo_url: form.logo_url,
+        phone: form.phone, email: form.email, website: form.website,
+        section_label: form.section_label,
+        logo_url: form.logo_url, secondary_logo_url: form.secondary_logo_url,
         principal_name: form.principal_name, principal_signature_url: form.principal_signature_url,
       }).eq("id", 1);
       if (error) throw error;
@@ -45,17 +47,24 @@ function SettingsPage() {
       <Card className="p-6 space-y-4">
         <div className="grid gap-4 md:grid-cols-2">
           <div><Label>School name</Label><Input value={form.school_name ?? ""} onChange={e => setForm({ ...form, school_name: e.target.value })} /></div>
+          <div><Label>Section label</Label><Input placeholder="Nursery / Primary / Secondary School" value={form.section_label ?? ""} onChange={e => setForm({ ...form, section_label: e.target.value })} /></div>
           <div><Label>Motto</Label><Input value={form.motto ?? ""} onChange={e => setForm({ ...form, motto: e.target.value })} /></div>
+          <div><Label>Website</Label><Input value={form.website ?? ""} onChange={e => setForm({ ...form, website: e.target.value })} /></div>
           <div className="md:col-span-2"><Label>Address</Label><Input value={form.address ?? ""} onChange={e => setForm({ ...form, address: e.target.value })} /></div>
           <div><Label>Phone</Label><Input value={form.phone ?? ""} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
           <div><Label>Email</Label><Input value={form.email ?? ""} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
           <div><Label>Principal name</Label><Input value={form.principal_name ?? ""} onChange={e => setForm({ ...form, principal_name: e.target.value })} /></div>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-3">
           <div>
-            <Label>School logo</Label>
+            <Label>Primary logo</Label>
             {form.logo_url && <img src={form.logo_url} alt="logo" className="my-2 h-20 w-20 rounded object-contain bg-muted" />}
             <Input type="file" accept="image/*" onChange={e => e.target.files?.[0] && upload(e.target.files[0], "logos", "logo_url")} />
+          </div>
+          <div>
+            <Label>Secondary logo / emblem</Label>
+            {form.secondary_logo_url && <img src={form.secondary_logo_url} alt="emblem" className="my-2 h-20 w-20 rounded object-contain bg-muted" />}
+            <Input type="file" accept="image/*" onChange={e => e.target.files?.[0] && upload(e.target.files[0], "logos", "secondary_logo_url")} />
           </div>
           <div>
             <Label>Principal signature</Label>

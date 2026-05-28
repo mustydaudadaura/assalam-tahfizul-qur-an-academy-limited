@@ -17,6 +17,8 @@ function SessionsPage() {
   const qc = useQueryClient();
   const [newSession, setNewSession] = useState("");
   const [termName, setTermName] = useState("");
+  const [termBegins, setTermBegins] = useState("");
+  const [termEnds, setTermEnds] = useState("");
   const [sessionId, setSessionId] = useState("");
 
   const { data: sessions } = useQuery({ queryKey: ["sessions"], queryFn: async () => (await supabase.from("sessions").select("*, terms(*)").order("created_at", { ascending: false })).data ?? [] });
@@ -27,8 +29,22 @@ function SessionsPage() {
     onError: (e: Error) => toast.error(e.message),
   });
   const addTerm = useMutation({
-    mutationFn: async () => { const { error } = await supabase.from("terms").insert({ session_id: sessionId, name: termName }); if (error) throw error; },
-    onSuccess: () => { toast.success("Term added"); qc.invalidateQueries({ queryKey: ["sessions"] }); setTermName(""); },
+    mutationFn: async () => {
+      const { error } = await supabase.from("terms").insert({
+        session_id: sessionId, name: termName,
+        term_begins: termBegins || null, term_ends: termEnds || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Term added"); qc.invalidateQueries({ queryKey: ["sessions"] }); setTermName(""); setTermBegins(""); setTermEnds(""); },
+    onError: (e: Error) => toast.error(e.message),
+  });
+  const updateTermDates = useMutation({
+    mutationFn: async ({ id, term_begins, term_ends }: { id: string; term_begins: string | null; term_ends: string | null }) => {
+      const { error } = await supabase.from("terms").update({ term_begins, term_ends }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Dates updated"); qc.invalidateQueries({ queryKey: ["sessions"] }); },
     onError: (e: Error) => toast.error(e.message),
   });
   const setCurrentSession = useMutation({
