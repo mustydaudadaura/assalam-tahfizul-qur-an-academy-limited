@@ -29,6 +29,7 @@ import { Route as AdminStudentsRouteImport } from './routes/admin.students'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSessionsRouteImport } from './routes/admin.sessions'
 import { Route as AdminResultsRouteImport } from './routes/admin.results'
+import { Route as AdminReportRouteImport } from './routes/admin.report'
 import { Route as AdminRemarksRouteImport } from './routes/admin.remarks'
 import { Route as AdminClassesRouteImport } from './routes/admin.classes'
 import { Route as AdminBroadsheetRouteImport } from './routes/admin.broadsheet'
@@ -133,6 +134,11 @@ const AdminResultsRoute = AdminResultsRouteImport.update({
   path: '/results',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminReportRoute = AdminReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminRemarksRoute = AdminRemarksRouteImport.update({
   id: '/remarks',
   path: '/remarks',
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/admin/broadsheet': typeof AdminBroadsheetRoute
   '/admin/classes': typeof AdminClassesRoute
   '/admin/remarks': typeof AdminRemarksRoute
+  '/admin/report': typeof AdminReportRoute
   '/admin/results': typeof AdminResultsRoute
   '/admin/sessions': typeof AdminSessionsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/admin/broadsheet': typeof AdminBroadsheetRoute
   '/admin/classes': typeof AdminClassesRoute
   '/admin/remarks': typeof AdminRemarksRoute
+  '/admin/report': typeof AdminReportRoute
   '/admin/results': typeof AdminResultsRoute
   '/admin/sessions': typeof AdminSessionsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   '/admin/broadsheet': typeof AdminBroadsheetRoute
   '/admin/classes': typeof AdminClassesRoute
   '/admin/remarks': typeof AdminRemarksRoute
+  '/admin/report': typeof AdminReportRoute
   '/admin/results': typeof AdminResultsRoute
   '/admin/sessions': typeof AdminSessionsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/admin/broadsheet'
     | '/admin/classes'
     | '/admin/remarks'
+    | '/admin/report'
     | '/admin/results'
     | '/admin/sessions'
     | '/admin/settings'
@@ -256,6 +266,7 @@ export interface FileRouteTypes {
     | '/admin/broadsheet'
     | '/admin/classes'
     | '/admin/remarks'
+    | '/admin/report'
     | '/admin/results'
     | '/admin/sessions'
     | '/admin/settings'
@@ -281,6 +292,7 @@ export interface FileRouteTypes {
     | '/admin/broadsheet'
     | '/admin/classes'
     | '/admin/remarks'
+    | '/admin/report'
     | '/admin/results'
     | '/admin/sessions'
     | '/admin/settings'
@@ -448,6 +460,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminResultsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/report': {
+      id: '/admin/report'
+      path: '/report'
+      fullPath: '/admin/report'
+      preLoaderRoute: typeof AdminReportRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/remarks': {
       id: '/admin/remarks'
       path: '/remarks'
@@ -476,6 +495,7 @@ interface AdminRouteChildren {
   AdminBroadsheetRoute: typeof AdminBroadsheetRoute
   AdminClassesRoute: typeof AdminClassesRoute
   AdminRemarksRoute: typeof AdminRemarksRoute
+  AdminReportRoute: typeof AdminReportRoute
   AdminResultsRoute: typeof AdminResultsRoute
   AdminSessionsRoute: typeof AdminSessionsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -489,6 +509,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBroadsheetRoute: AdminBroadsheetRoute,
   AdminClassesRoute: AdminClassesRoute,
   AdminRemarksRoute: AdminRemarksRoute,
+  AdminReportRoute: AdminReportRoute,
   AdminResultsRoute: AdminResultsRoute,
   AdminSessionsRoute: AdminSessionsRoute,
   AdminSettingsRoute: AdminSettingsRoute,

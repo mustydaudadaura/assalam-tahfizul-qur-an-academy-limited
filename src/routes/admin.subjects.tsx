@@ -11,14 +11,17 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/subjects")({ component: SubjectsPage });
 
+const CATEGORIES = ["Core Subjects", "Vocational", "Elective", "Pre-Vocational"];
+
 function SubjectsPage() {
   const qc = useQueryClient();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
+  const [category, setCategory] = useState("Core Subjects");
 
   const { data: subjects } = useQuery({ queryKey: ["subjects"], queryFn: async () => (await supabase.from("subjects").select("*").order("name")).data ?? [] });
   const add = useMutation({
-    mutationFn: async () => { const { error } = await supabase.from("subjects").insert({ name, code }); if (error) throw error; },
+    mutationFn: async () => { const { error } = await supabase.from("subjects").insert({ name, code, category }); if (error) throw error; },
     onSuccess: () => { toast.success("Added"); qc.invalidateQueries({ queryKey: ["subjects"] }); setName(""); setCode(""); },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -33,18 +36,22 @@ function SubjectsPage() {
       <Card className="p-6">
         <form onSubmit={e => { e.preventDefault(); add.mutate(); }} className="flex flex-wrap gap-3">
           <Input placeholder="Subject name" value={name} onChange={e => setName(e.target.value)} required className="flex-1 min-w-40" />
-          <Input placeholder="Code (e.g. MTH)" value={code} onChange={e => setCode(e.target.value)} className="w-40" />
+          <Input placeholder="Code (e.g. MTH)" value={code} onChange={e => setCode(e.target.value)} className="w-32" />
+          <select value={category} onChange={e => setCategory(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm">
+            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
           <Button type="submit"><Plus className="mr-2 size-4" />Add</Button>
         </form>
       </Card>
       <Card>
         <Table>
-          <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Code</TableHead><TableHead></TableHead></TableRow></TableHeader>
+          <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Code</TableHead><TableHead>Category</TableHead><TableHead></TableHead></TableRow></TableHeader>
           <TableBody>
             {subjects?.map(s => (
               <TableRow key={s.id}>
                 <TableCell className="font-medium">{s.name}</TableCell>
                 <TableCell className="font-mono text-xs text-muted-foreground">{s.code}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{(s as { category?: string }).category ?? "—"}</TableCell>
                 <TableCell><Button variant="ghost" size="icon" onClick={() => del.mutate(s.id)}><Trash2 className="size-4 text-destructive" /></Button></TableCell>
               </TableRow>
             ))}
