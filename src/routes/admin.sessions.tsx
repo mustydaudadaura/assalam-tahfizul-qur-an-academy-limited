@@ -83,10 +83,12 @@ function SessionsPage() {
               <SelectTrigger><SelectValue placeholder="Select session" /></SelectTrigger>
               <SelectContent>{sessions?.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}</SelectContent>
             </Select>
-            <div className="flex gap-2">
-              <Input placeholder="Term name" value={termName} onChange={e => setTermName(e.target.value)} />
-              <Button onClick={() => addTerm.mutate()} disabled={!sessionId || !termName}><Plus className="size-4" /></Button>
+            <Input placeholder="Term name (e.g. First Term)" value={termName} onChange={e => setTermName(e.target.value)} />
+            <div className="grid grid-cols-2 gap-2">
+              <div><Label className="text-xs">Term begins</Label><Input type="date" value={termBegins} onChange={e => setTermBegins(e.target.value)} /></div>
+              <div><Label className="text-xs">Term ends</Label><Input type="date" value={termEnds} onChange={e => setTermEnds(e.target.value)} /></div>
             </div>
+            <Button onClick={() => addTerm.mutate()} disabled={!sessionId || !termName} className="w-full"><Plus className="mr-2 size-4" />Add term</Button>
           </div>
         </Card>
       </div>
@@ -101,12 +103,19 @@ function SessionsPage() {
               </div>
               {!s.is_current && <Button variant="outline" size="sm" onClick={() => setCurrentSession.mutate(s.id)}>Set current</Button>}
             </div>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-3 space-y-2">
               {(s as any).terms?.map((t: any) => (
-                <button key={t.id} onClick={() => !t.is_current && setCurrentTerm.mutate({ id: t.id, session_id: s.id })}
-                  className={`flex items-center gap-1 rounded-md border px-3 py-1 text-sm ${t.is_current ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
-                  {t.is_current && <Check className="size-3" />}{t.name}
-                </button>
+                <div key={t.id} className="flex flex-wrap items-center gap-2 rounded-md border p-2">
+                  <button onClick={() => !t.is_current && setCurrentTerm.mutate({ id: t.id, session_id: s.id })}
+                    className={`flex items-center gap-1 rounded-md border px-3 py-1 text-sm ${t.is_current ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
+                    {t.is_current && <Check className="size-3" />}{t.name}
+                  </button>
+                  <Input type="date" defaultValue={t.term_begins ?? ""} className="h-8 w-40"
+                    onBlur={e => e.target.value !== (t.term_begins ?? "") && updateTermDates.mutate({ id: t.id, term_begins: e.target.value || null, term_ends: t.term_ends })} />
+                  <span className="text-xs text-muted-foreground">to</span>
+                  <Input type="date" defaultValue={t.term_ends ?? ""} className="h-8 w-40"
+                    onBlur={e => e.target.value !== (t.term_ends ?? "") && updateTermDates.mutate({ id: t.id, term_begins: t.term_begins, term_ends: e.target.value || null })} />
+                </div>
               ))}
             </div>
           </Card>
