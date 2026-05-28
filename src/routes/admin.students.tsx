@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/students")({ component: StudentsPage });
 
-const empty = { admission_no: "", full_name: "", gender: "Male", class_id: "", guardian_name: "", guardian_phone: "", date_of_birth: "", passport_url: "" };
+const empty = { admission_no: "", full_name: "", gender: "Male", class_id: "", guardian_name: "", guardian_phone: "", date_of_birth: "", passport_url: "", house: "" };
 
 function StudentsPage() {
   const qc = useQueryClient();
@@ -82,6 +82,7 @@ function StudentsPage() {
       admission_no: s.admission_no, full_name: s.full_name, gender: s.gender ?? "Male",
       class_id: s.class_id ?? "", guardian_name: s.guardian_name ?? "", guardian_phone: s.guardian_phone ?? "",
       date_of_birth: s.date_of_birth ?? "", passport_url: s.passport_url ?? "",
+      house: (s as { house?: string | null }).house ?? "",
     });
     setOpen(true);
   };
@@ -127,7 +128,10 @@ function StudentsPage() {
                 </div>
               </div>
               <div><Label>Guardian / parent name</Label><Input value={form.guardian_name} onChange={e => setForm({ ...form, guardian_name: e.target.value })} /></div>
-              <div><Label>Parent phone</Label><Input value={form.guardian_phone} onChange={e => setForm({ ...form, guardian_phone: e.target.value })} /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Parent phone</Label><Input value={form.guardian_phone} onChange={e => setForm({ ...form, guardian_phone: e.target.value })} /></div>
+                <div><Label>House</Label><Input placeholder="e.g. Red / Green" value={form.house} onChange={e => setForm({ ...form, house: e.target.value })} /></div>
+              </div>
             </div>
             <DialogFooter><Button onClick={() => save.mutate()} disabled={save.isPending || !form.full_name || !form.admission_no}>Save</Button></DialogFooter>
           </DialogContent>
