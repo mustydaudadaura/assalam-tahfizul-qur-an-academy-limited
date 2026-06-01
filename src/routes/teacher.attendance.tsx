@@ -82,7 +82,7 @@ function AttendancePage() {
       }));
       const { error } = await supabase
         .from("attendance_daily")
-        .upsert(rows, { onConflict: "student_id,session_id,term_id,date" });
+        .upsert(rows as any, { onConflict: "student_id,session_id,term_id,date" });
       if (error) throw error;
     },
     onSuccess: () => {

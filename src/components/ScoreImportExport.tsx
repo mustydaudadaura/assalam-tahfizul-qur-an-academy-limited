@@ -125,7 +125,7 @@ export function ScoreImportExport({ ready, students, filters, currentScores, onI
         }));
         const { error } = await supabase
           .from("results")
-          .upsert(payload, { onConflict: "student_id,subject_id,session_id,term_id" });
+          .upsert(payload as any, { onConflict: "student_id,subject_id,session_id,term_id" });
         if (error) {
           toast.error(`Save failed: ${error.message}`);
           setBusy(false);

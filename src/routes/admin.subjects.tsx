@@ -21,7 +21,7 @@ function SubjectsPage() {
 
   const { data: subjects } = useQuery({ queryKey: ["subjects"], queryFn: async () => (await supabase.from("subjects").select("*").order("name")).data ?? [] });
   const add = useMutation({
-    mutationFn: async () => { const { error } = await supabase.from("subjects").insert({ name, code, category }); if (error) throw error; },
+    mutationFn: async () => { const { error } = await supabase.from("subjects").insert({ name, code, category } as any); if (error) throw error; },
     onSuccess: () => { toast.success("Added"); qc.invalidateQueries({ queryKey: ["subjects"] }); setName(""); setCode(""); },
     onError: (e: Error) => toast.error(e.message),
   });
