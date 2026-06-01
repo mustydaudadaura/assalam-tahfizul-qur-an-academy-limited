@@ -14,6 +14,7 @@ export const Route = createFileRoute("/admin/classes")({ component: ClassesPage 
 
 function ClassesPage() {
   const qc = useQueryClient();
+  const { schoolId } = useSchool();
   const [name, setName] = useState("");
   const [level, setLevel] = useState("");
   const [section, setSection] = useState("");
@@ -21,7 +22,7 @@ function ClassesPage() {
   const { data: classes } = useQuery({ queryKey: ["classes"], queryFn: async () => (await supabase.from("classes").select("*").order("name")).data ?? [] });
 
   const add = useMutation({
-    mutationFn: async () => { const { error } = await supabase.from("classes").insert({ name, level, section: section || null }); if (error) throw error; },
+    mutationFn: async () => { if (!schoolId) throw new Error("No school"); const { error } = await supabase.from("classes").insert({ name, level, section: section || null, school_id: schoolId }); if (error) throw error; },
     onSuccess: () => { toast.success("Added"); qc.invalidateQueries({ queryKey: ["classes"] }); setName(""); setLevel(""); setSection(""); },
     onError: (e: Error) => toast.error(e.message),
   });
