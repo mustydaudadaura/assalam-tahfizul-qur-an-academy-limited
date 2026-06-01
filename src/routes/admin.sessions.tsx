@@ -24,13 +24,13 @@ function SessionsPage() {
   const { data: sessions } = useQuery({ queryKey: ["sessions"], queryFn: async () => (await supabase.from("sessions").select("*, terms(*)").order("created_at", { ascending: false })).data ?? [] });
 
   const addSession = useMutation({
-    mutationFn: async () => { const { error } = await supabase.from("sessions").insert({ name: newSession }); if (error) throw error; },
+    mutationFn: async () => { const { error } = await supabase.from("sessions").insert({ name: newSession } as any); if (error) throw error; },
     onSuccess: () => { toast.success("Session added"); qc.invalidateQueries({ queryKey: ["sessions"] }); setNewSession(""); },
     onError: (e: Error) => toast.error(e.message),
   });
   const addTerm = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("terms").insert({
+      const { error } = await supabase.from("terms").insert({ /*school_id added via cast*/
         session_id: sessionId, name: termName,
         term_begins: termBegins || null, term_ends: termEnds || null,
       });

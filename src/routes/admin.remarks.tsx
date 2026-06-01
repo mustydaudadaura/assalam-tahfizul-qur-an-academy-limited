@@ -107,7 +107,7 @@ function RemarksPage() {
         affective: m.affective ?? {},
         psychomotor: m.psychomotor ?? {},
       }));
-      const { error } = await supabase.from("student_term_reports").upsert(rows, { onConflict: "student_id,term_id" });
+      const { error } = await supabase.from("student_term_reports").upsert(rows as any, { onConflict: "student_id,term_id" });
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["remarks-existing"] }); },

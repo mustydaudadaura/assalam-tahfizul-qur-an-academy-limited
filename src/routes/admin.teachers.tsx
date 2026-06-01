@@ -53,7 +53,7 @@ function TeachersPage() {
     mutationFn: async () => {
       const res = await createFn({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: "teacher" } });
       if (form.subject_id && form.class_id) {
-        await supabase.from("teacher_assignments").insert({ teacher_id: res.id, subject_id: form.subject_id, class_id: form.class_id });
+        await supabase.from("teacher_assignments").insert({ teacher_id: res.id, subject_id: form.subject_id, class_id: form.class_id } as any);
       }
     },
     onSuccess: () => {
@@ -86,7 +86,7 @@ function TeachersPage() {
 
   const addAssign = useMutation({
     mutationFn: async (teacher_id: string) => {
-      const { error } = await supabase.from("teacher_assignments").insert({ teacher_id, ...assign });
+      const { error } = await supabase.from("teacher_assignments").insert({ teacher_id, ...assign } as any);
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Assigned"); qc.invalidateQueries({ queryKey: ["assignments"] }); setAssignOpen(null); setAssign({ subject_id: "", class_id: "" }); },

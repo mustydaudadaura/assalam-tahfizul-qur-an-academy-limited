@@ -51,7 +51,7 @@ export function ResultsPage() {
         session_id: filters.session_id, term_id: filters.term_id,
         ca1: s.ca1 || 0, ca2: s.ca2 || 0, exam: s.exam || 0,
       }));
-      const { error } = await supabase.from("results").upsert(rows, { onConflict: "student_id,subject_id,session_id,term_id" });
+      const { error } = await supabase.from("results").upsert(rows as any, { onConflict: "student_id,subject_id,session_id,term_id" });
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Results saved"); qc.invalidateQueries({ queryKey: ["roster"] }); },

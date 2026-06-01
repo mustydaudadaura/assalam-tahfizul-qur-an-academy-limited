@@ -55,7 +55,7 @@ function StudentsPage() {
         const { error } = await supabase.from("students").update(payload).eq("id", editId);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("students").insert(payload);
+        const { error } = await supabase.from("students").insert(payload as any);
         if (error) throw error;
       }
     },
