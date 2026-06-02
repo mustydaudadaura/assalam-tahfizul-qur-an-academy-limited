@@ -16,6 +16,7 @@ export const Route = createFileRoute("/admin/sessions")({ component: SessionsPag
 
 function SessionsPage() {
   const qc = useQueryClient();
+  const { schoolId } = useSchool();
   const [newSession, setNewSession] = useState("");
   const [termName, setTermName] = useState("");
   const [termBegins, setTermBegins] = useState("");
@@ -25,14 +26,15 @@ function SessionsPage() {
   const { data: sessions } = useQuery({ queryKey: ["sessions"], queryFn: async () => (await supabase.from("sessions").select("*, terms(*)").order("created_at", { ascending: false })).data ?? [] });
 
   const addSession = useMutation({
-    mutationFn: async () => { const { error } = await supabase.from("sessions").insert({ name: newSession } as any); if (error) throw error; },
+    mutationFn: async () => { if (!schoolId) throw new Error("No school"); const { error } = await supabase.from("sessions").insert({ name: newSession, school_id: schoolId }); if (error) throw error; },
     onSuccess: () => { toast.success("Session added"); qc.invalidateQueries({ queryKey: ["sessions"] }); setNewSession(""); },
     onError: (e: Error) => toast.error(e.message),
   });
   const addTerm = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("terms").insert({ /*school_id added via cast*/
-        session_id: sessionId, name: termName,
+      if (!schoolId) throw new Error("No school");
+      const { error } = await supabase.from("terms").insert({
+        session_id: sessionId, name: termName, school_id: schoolId,
         term_begins: termBegins || null, term_ends: termEnds || null,
       });
       if (error) throw error;
