@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ParentRouteImport } from './routes/parent'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -47,6 +48,11 @@ const StudentRoute = StudentRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentRoute = ParentRouteImport.update({
+  id: '/parent',
+  path: '/parent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/parent': typeof ParentRoute
   '/signup': typeof SignupRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
@@ -184,6 +191,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/parent': typeof ParentRoute
   '/signup': typeof SignupRoute
   '/admin/broadsheet': typeof AdminBroadsheetRoute
   '/admin/classes': typeof AdminClassesRoute
@@ -209,6 +217,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/parent': typeof ParentRoute
   '/signup': typeof SignupRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
@@ -237,6 +246,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/login'
+    | '/parent'
     | '/signup'
     | '/student'
     | '/teacher'
@@ -262,6 +272,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/parent'
     | '/signup'
     | '/admin/broadsheet'
     | '/admin/classes'
@@ -286,6 +297,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/login'
+    | '/parent'
     | '/signup'
     | '/student'
     | '/teacher'
@@ -313,6 +325,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ParentRoute: typeof ParentRoute
   SignupRoute: typeof SignupRoute
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
@@ -339,6 +352,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent': {
+      id: '/parent'
+      path: '/parent'
+      fullPath: '/parent'
+      preLoaderRoute: typeof ParentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -557,6 +577,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
+  ParentRoute: ParentRoute,
   SignupRoute: SignupRoute,
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
@@ -564,3 +585,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
