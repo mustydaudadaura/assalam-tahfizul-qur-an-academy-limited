@@ -125,3 +125,46 @@
   body { background: white !important; }
   .print-page { box-shadow: none !important; border: none !important; }
 }
+
+/* ===== Crypto dashboard tokens (3D glass + neon) ===== */
+@layer utilities {
+  .stat-glass {
+    position: relative;
+    background:
+      radial-gradient(120% 120% at 0% 0%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 55%),
+      radial-gradient(120% 120% at 100% 100%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 55%),
+      linear-gradient(160deg, color-mix(in oklab, var(--card) 92%, transparent), color-mix(in oklab, var(--card) 70%, transparent));
+    border: 1px solid color-mix(in oklab, var(--primary) 25%, var(--border));
+    box-shadow:
+      0 1px 0 0 color-mix(in oklab, white 18%, transparent) inset,
+      0 -24px 40px -28px color-mix(in oklab, var(--accent) 60%, transparent) inset,
+      0 24px 50px -28px color-mix(in oklab, var(--primary) 50%, transparent),
+      0 2px 10px -2px color-mix(in oklab, black 35%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .stat-glass::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 40%, color-mix(in oklab, white 14%, transparent) 50%, transparent 60%);
+    mix-blend-mode: overlay; pointer-events: none;
+  }
+  .neon-up { color: oklch(0.78 0.18 152); text-shadow: 0 0 14px color-mix(in oklab, oklch(0.78 0.18 152) 60%, transparent); }
+  .neon-down { color: oklch(0.70 0.22 22); text-shadow: 0 0 14px color-mix(in oklab, oklch(0.70 0.22 22) 60%, transparent); }
+  .neon-text { background: linear-gradient(180deg, var(--foreground), color-mix(in oklab, var(--primary) 60%, var(--foreground))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grid-bg {
+    background-image:
+      radial-gradient(1200px 600px at 0% -20%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 60%),
+      linear-gradient(color-mix(in oklab, var(--primary) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--primary) 8%, transparent) 1px, transparent 1px);
+    background-size: auto, auto, 32px 32px, 32px 32px;
+  }
+  .tilt-3d { transform: perspective(1200px) rotateX(2deg); transform-origin: center top; }
+  @keyframes pulse-ring { 0%,100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 35%, transparent); } 50% { box-shadow: 0 0 0 8px color-mix(in oklab, var(--accent) 0%, transparent); } }
+  .pulse-dot { animation: pulse-ring 2.4s ease-out infinite; }
+}
+
