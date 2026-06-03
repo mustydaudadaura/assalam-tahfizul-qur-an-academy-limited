@@ -14,7 +14,9 @@ function Index() {
     );
   }
   if (!user) return <Navigate to="/login" />;
+  if (role === "super_admin") return <Navigate to="/super" />;
   if (role === "admin") return <Navigate to="/admin" />;
   if (role === "teacher") return <Navigate to="/teacher" />;
+  if (role === "parent") return <Navigate to="/parent" />;
   return <Navigate to="/student" />;
 }

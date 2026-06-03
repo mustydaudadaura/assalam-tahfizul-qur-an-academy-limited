@@ -377,6 +377,62 @@ export type Database = {
         }
         Relationships: []
       }
+      school_subscriptions: {
+        Row: {
+          billing_cycle: string
+          created_at: string
+          current_period_end: string
+          current_period_start: string
+          id: string
+          notes: string | null
+          plan: string
+          price_ngn: number
+          school_id: string
+          seats: number
+          status: string
+          trial_ends_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          billing_cycle?: string
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          notes?: string | null
+          plan?: string
+          price_ngn?: number
+          school_id: string
+          seats?: number
+          status?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          billing_cycle?: string
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          notes?: string | null
+          plan?: string
+          price_ngn?: number
+          school_id?: string
+          seats?: number
+          status?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_subscriptions_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: true
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schools: {
         Row: {
           accent_color: string | null
@@ -861,6 +917,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_super_admin: { Args: never; Returns: boolean }
+      promote_to_super_admin: { Args: { _email: string }; Returns: string }
       user_belongs_to_school: { Args: { _school_id: string }; Returns: boolean }
     }
     Enums: {
